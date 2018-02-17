@@ -4,6 +4,9 @@
 
 (def captcha-half-length (Integer. (* (count captcha) 0.5)))
 
+(defn parse-char [c]
+  (Integer. (str c)))
+
 ;; day 25
 (loop [car (Integer. (str (first captcha))) 
       cdr (rest captcha) 
@@ -18,14 +21,16 @@
 
 
 ;; day 25 part 2
-(loop [car (Integer. (str (first captcha))) 
-      cdr (rest captcha) 
-      total 0]
-  (if (empty? cdr)
-    (if (= car (Integer. (str (nth cdr (- captcha-half-length 1))))) ;; takes into account circular nature of list
-      (+ total car)
-      total)
-    (if (= car (Integer. (str (nth cdr (- captcha-half-length 1)))))
-      (recur (Integer. (str (first cdr))) (rest cdr) (+ total car car))
-      (recur (Integer. (str (first cdr))) (rest cdr) total))))
-      
+(loop [
+  counter 0
+  total 0]
+  (cond 
+    (< counter (- (int captcha-half-length) 1))
+      (if (= (parse-char (nth captcha counter)) (parse-char (nth captcha (+ counter captcha-half-length))))
+        (recur (inc counter) (+ total (* 2 (parse-char (nth captcha counter)))))
+        (recur (inc counter) total))))  
+
+;; commit     
+
+
+    
