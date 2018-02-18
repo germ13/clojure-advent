@@ -20,6 +20,12 @@
   (- (reduce max line)
      (reduce min line)))
 
-(reduce + 
-    (for [line (clojure.string/split spreadsheet #"\n")]
-    (max-min-difference (map #(. Integer parseInt %) (clojure.string/split line #" ")))))
+; (reduce +
+;     (for [line (clojure.string/split spreadsheet #"\n")]
+;     (max-min-difference (map #(. Integer parseInt %) (clojure.string/split line #" ")))))
+
+(for [line (clojure.string/split spreadsheet #"\n")]
+    (for [num (clojure.string/split line #" ")]
+        num
+    )
+)
