@@ -1,4 +1,3 @@
-;; Clojure - Advent of code, day 24.
 (def spreadsheet
 "1208 412 743 57 1097 53 71 1029 719 133 258 69 1104 373 367 365
 4011 4316 1755 4992 228 240 3333 208 247 3319 4555 717 1483 4608 1387 3542
@@ -17,28 +16,37 @@
 2290 157 2759 3771 4112 2063 153 3538 3740 130 3474 1013 180 2164 170 189
 525 1263 146 954 188 232 1019 918 268 172 1196 1091 1128 234 650 420")
 
-;; Utility funnctions:
+;; day 24 part 1
 (defn max-min-difference [line]
-    "Take the delta from the max and min elements in a collection."
-    (- (reduce max line)
-       (reduce min line))
+  (- (reduce max line)
+     (reduce min line)))
+
+(reduce + 
+    (for [line (clojure.string/split spreadsheet #"\n")]
+    (max-min-difference (map #(. Integer parseInt %) (clojure.string/split line #" ")))))
+
+;; day 24 part 2
 
 (defn drop-nth [v n]
-    "Return a vector with the nth elements removed."
-    (concat
-        (subvec (vec v) 0 n)
-        (subvec (vec v) (inc n))))
+  (concat 
+    (subvec (vec v) 0 n)
+    (subvec (vec v) (inc n))))
 
-;; Day 24, part 1
-    (reduce +
-        (for [line (clojure.string/split spreadsheet #"\n")]
-        (max-min-difference (map #(. Integer parseInt %) (clojure.string/split line #" ")))))
-
-
-;; Day 24, part 2
-(for [line (clojure.string/split spreadsheet #"\n")]
-    (loop [
-        counter 0
-        num (map #(. Integer parseInt %) (clojure.string/split line #" "))]
-    )
-)
+(defn divides? [dividend divisor]
+    (if (= dividend divisor)
+        false
+        (if (= (mod dividend divisor) 0)
+            true
+            false)))
+(apply + 
+    (for [line (clojure.string/split spreadsheet #"\n")]
+        (apply + 
+            (for [
+                number1 (map #(. Integer parseInt %) (clojure.string/split line #" "))
+                number2 (map #(. Integer parseInt %) (clojure.string/split line #" "))
+                ]
+                (if (divides? number1 number2) 
+                    (do 
+                        ; (print number1 "," number2 "...") 
+                        (/ number1 number2)) 
+                    0)))))
