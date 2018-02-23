@@ -10,9 +10,6 @@
 (direction 1)
 
 
-
-
-
 (defn move [location heading]
       [ (+ (first location) (first (nth direction (mod heading 4))))
         (+ (second location) (second (nth direction (mod heading 4))))])
@@ -23,18 +20,21 @@
 (move [3 3] 2)
 (move [3 3] 3)
 
+(mod 7 4)
+(def endpoint 5)
 
-(def endpoint 14)
 (loop [
         counter 1
         current-coordinates [0 0]
-        movement 0
-        scalar 2
-        increase-scalar 0]
-  (if (= counter endpoint)
+        heading 0
+        submovement 1
+        increase-delta 2]
+  (if (= counter 6)
     current-coordinates
-    (recur (inc counter)
-           (move current-coordinates movement)
-           (if (= increase-scalar scalar) (inc movement) movement)
-           (if (= increase-scalar scalar) (inc scalar) scalar)
-           (mod (inc increase-scalar) scalar))))
+    (recur (inc counter)                               ;; counter
+           (move current-coordinates heading)         ;; current coordinates
+           (if (= (mod increase-delta submovement) 0) (mod (inc heading) 4) heading) ;; heading
+           (if (> submovement increase-delta ) 1 (inc submovement)) ;; submovement
+           (if (> submovement increase-delta) (* 2 increase-delta) increase-delta))))  ;; increasedelta
+
+
