@@ -7,62 +7,46 @@
     [  0 -1 ]
 ])
 
-(direction 1)
-
 
 (defn move [location heading]
       [ (+ (first location) (first (nth direction (mod heading 4))))
         (+ (second location) (second (nth direction (mod heading 4))))])
 
-(mod 9 3)
+;; counter         : '(1 2 3 5 7 10 13 17 21 26 31 37 43 50 57)
+;; delta (gnomon)  : '(  1 1 2 2  3  3  4  4  5  5  6  6  7  7)
 
-(move [3 3] 0)
-(move [3 3] 1)
-(move [3 3] 2)
-(move [3 3] 3)
+(defn turn-point? [counter delta]
+  (if (or (= (+ (* delta delta) 1) counter)
+          (= (+ (* delta delta) (+ delta 1)) counter))
+    true
+    false))
 
-(= (* 2 1.0) (* 4 0.5))
-(mod 7 4)
-(def endpoint 5)
+(defn increase-delta? [counter delta]
+  (if (= (+ (* delta delta) (+ delta 1)) counter)
+    true
+    false))
 
-;;'(1 2 3 5 7 10 13 17 21 26 31 37 43 50 57)
-;;'(  1 1 2 2  3  3  4  4  5  5  6  6  7  7
-
-(loop [
-        counter 1
-        current-coordinates [0 0]
-        heading 0
-        submovement 0
-        submovement-treshold 1
-        submovement-treshold-times 0
-        ]
-  (if (= counter 5)
-    current-coordinates
-    (recur
-      ;; counter
-      (inc counter)
-      ;; coordinates
-      (move current-coordinates heading)
-      ;; heading
-      (if (< submovement submovement-treshold)
-        heading
-        (mod (inc heading) 4))
-      ;; submovement
-      (if (< submovement submovement-treshold)
-        (inc submovement)
-        0)
-      ;; submovement-treshold
-      (if (and
-            (= submovement-treshold-times 1)
-            (= submovement submovement-treshold))
-        (inc submovement-treshold)
-        submovement-treshold)
-      (if (< submovement submovement-treshold)
-        submovement-treshold-times
-        (mod (inc submovement-treshold-times) 2)
-        ))))
+(defn ulam [endpoint]
+  (loop [
+          counter 1
+          current-coordinates [0 0]
+          heading 0
+          delta 1
+          ]
+    (if (= counter endpoint)
+      current-coordinates
+      (recur
+        ;; counter
+        (inc counter)
+        ;; coordinates
+        (move current-coordinates heading)
+        ;; heading
+        (if (turn-point? counter delta)
+          (mod (inc heading) 4)
+          heading)
+        ;; delta
+        (if (increase-delta? counter delta)
+          (inc delta)
+          delta)))))
 
 
-
-(defn turn-point? [counter]
-  true)
