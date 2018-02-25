@@ -1,4 +1,4 @@
- (ns day23)
+(ns day23)
 
 (def direction [
     [  1  0 ]
@@ -26,7 +26,7 @@
 (def endpoint 5)
 
 ;;'(1 2 3 5 7 10 13 17 21 26 31 37 43 50 57)
-;; '(  1 1 2 2  3  3  4  4  5  5  6  6  7  7
+;;'(  1 1 2 2  3  3  4  4  5  5  6  6  7  7
 
 (loop [
         counter 1
@@ -36,23 +36,33 @@
         submovement-treshold 1
         submovement-treshold-times 0
         ]
-  (if (= counter 4)
+  (if (= counter 5)
     current-coordinates
     (recur
-      (inc counter)                      ;; counter
-      (move current-coordinates heading) ;; coordinates
-      (if (= submovement submovement-treshold) ;;heading
-        (mod (inc heading) 4)
-         heading)
-      (if (= submovement submovement-treshold)
-        0
-        (inc submovement))
-      (if (and       
-            (= submovement-treshold-times 1) 
-            (= submovement submovement-treshold)) 
-          (inc submovement-treshold)
-          submovement-treshold)
-      (if (= submovement submovement-treshold)
+      ;; counter
+      (inc counter)
+      ;; coordinates
+      (move current-coordinates heading)
+      ;; heading
+      (if (< submovement submovement-treshold)
+        heading
+        (mod (inc heading) 4))
+      ;; submovement
+      (if (< submovement submovement-treshold)
+        (inc submovement)
+        0)
+      ;; submovement-treshold
+      (if (and
+            (= submovement-treshold-times 1)
+            (= submovement submovement-treshold))
+        (inc submovement-treshold)
+        submovement-treshold)
+      (if (< submovement submovement-treshold)
+        submovement-treshold-times
         (mod (inc submovement-treshold-times) 2)
-        submovement-treshold-times))))
+        ))))
 
+
+
+(defn turn-point? [counter]
+  true)
