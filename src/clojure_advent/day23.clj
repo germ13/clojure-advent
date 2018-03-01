@@ -79,7 +79,7 @@
           (inc delta)
           delta)
         ;; value-at-counter
-
+        ;; TODO
 
         ;; coordinates-visited
         (conj coordinates-visited [current-coordinates (value-at-coordinate coordinates-visited coord)])
